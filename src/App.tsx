@@ -1,5 +1,11 @@
+import { PostContainer } from "./components";
+
 function App() {
-  return <>1</>;
+  return (
+    <>
+      <PostContainer />
+    </>
+  );
 }
 
 export default App;
