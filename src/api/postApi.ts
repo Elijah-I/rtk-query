@@ -8,7 +8,13 @@ export const postApi = createApi({
   endpoints: (build) => ({
     getPosts: build.query<Post[], void>({
       query: () => "posts",
-      providesTags: ["Posts"]
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: "Posts" as const, id })),
+              "Posts"
+            ]
+          : ["Posts"]
     }),
     createPost: build.mutation<Post, Omit<Post, "id">>({
       query: (post) => ({
@@ -31,7 +37,7 @@ export const postApi = createApi({
         method: "PUT",
         body: post
       }),
-      invalidatesTags: ["Posts"]
+      invalidatesTags: (_, __, { id }) => [{ type: "Posts" as const, id }]
     })
   })
 });
