@@ -12,9 +12,9 @@ export const postApi = createApi({
         result
           ? [
               ...result.map(({ id }) => ({ type: "Posts" as const, id })),
-              "Posts"
+              { type: "Posts" as const, id: "LIST" }
             ]
-          : ["Posts"]
+          : [{ type: "Posts" as const, id: "LIST" }]
     }),
     createPost: build.mutation<Post, Omit<Post, "id">>({
       query: (post) => ({
@@ -22,14 +22,14 @@ export const postApi = createApi({
         method: "POST",
         body: post
       }),
-      invalidatesTags: ["Posts"]
+      invalidatesTags: [{ type: "Posts" as const, id: "LIST" }]
     }),
     deletePost: build.mutation<Post, Post>({
       query: (post) => ({
         url: `posts/${post.id}`,
         method: "DELETE"
       }),
-      invalidatesTags: ["Posts"]
+      invalidatesTags: (_, __, { id }) => [{ type: "Posts" as const, id }]
     }),
     updatePost: build.mutation<Post, Post>({
       query: (post) => ({
